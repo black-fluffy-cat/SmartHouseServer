@@ -1,8 +1,10 @@
 package com.jj.smarthouseserver
 
+import com.jj.smarthouseserver.data.AlertData
+import com.jj.smarthouseserver.data.AlertFeedbackData
+import com.jj.smarthouseserver.data.HeartbeatData
+import com.jj.smarthouseserver.managers.RaspberryCallManager
 import io.ktor.application.*
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.jackson.*
@@ -17,19 +19,13 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 private val logger: Logger = LoggerFactory.getLogger("MainLogger")
+private const val SERVER_PORT = 8080
 
-data class HeartbeatData(val deviceName: String? = null, val timeFromStart: String, val timeFromAlert: String)
-data class AlertData(val deviceName: String? = null, val timeFromStart: String, val alertState: String)
-
-private lateinit var httpClient: HttpClient
-private lateinit var raspberryCallManager: RaspberryCallManager
+private val raspberryCallManager = RaspberryCallManager(logger)
 
 fun main(args: Array<String>) {
 
-    httpClient = HttpClient(CIO)
-    raspberryCallManager = RaspberryCallManager(httpClient, logger)
-
-    val server = embeddedServer(Netty, 8080) {
+    val server = embeddedServer(Netty, SERVER_PORT) {
         install(ContentNegotiation) {
             register(ContentType.Application.Json, JacksonConverter())
         }
@@ -46,6 +42,16 @@ fun main(args: Array<String>) {
                     raspberryCallManager.pingRaspberryToMakePhoto()
                 }
             }
+            post("/alertFeedback") {
+                withContext(Dispatchers.IO) {
+                    val alertFeedbackData = call.receive<AlertFeedbackData>()
+                    logger.info(
+                        "AlertFeedback - deviceName: ${alertFeedbackData.deviceName}, timeFromStart: ${alertFeedbackData.timeFromStart}," +
+                                " additionalInfo: ${alertFeedbackData.additionalInfo}"
+                    )
+                    call.respond(mapOf("OK" to true))
+                }
+            }
             post("/heartbeat") {
                 withContext(Dispatchers.IO) {
                     val heartbeatData = call.receive<HeartbeatData>()
@@ -54,6 +60,23 @@ fun main(args: Array<String>) {
                                 " timeFromAlert: ${heartbeatData.timeFromAlert}"
                     )
                     call.respond(mapOf("OK" to true))
+                }
+            }
+            post("/raspPhoto") {
+                withContext(Dispatchers.IO) {
+                    raspberryCallManager.pingRaspberryToMakePhoto()
+                    call.respond(mapOf("OK" to true))
+                }
+            }
+            get("/raspPhoto") {
+                withContext(Dispatchers.IO) {
+                    raspberryCallManager.pingRaspberryToMakePhoto()
+                    call.respond(mapOf("OK" to true))
+                }
+            }
+            get("/health") {
+                withContext(Dispatchers.IO) {
+                    call.respond("I am running!")
                 }
             }
         }
