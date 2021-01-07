@@ -4,6 +4,7 @@ import com.jj.smarthouseserver.data.NgrokAddressesCallData
 import org.slf4j.Logger
 
 class NgrokAddressesProcessor(val logger: Logger) {
+    //TODO Save logs to file
     fun process(ngrokAddressesCallData: NgrokAddressesCallData) {
         ngrokAddressesCallData.let { data ->
             logger.info("received Ngrok addresses from id: ${data.senderId}")

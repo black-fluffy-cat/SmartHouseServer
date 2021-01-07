@@ -6,6 +6,7 @@ import org.slf4j.Logger
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
+//TODO Make endpoints and methods for removing device from list by request
 class Monitoring(private val logger: Logger) {
 
     companion object {
