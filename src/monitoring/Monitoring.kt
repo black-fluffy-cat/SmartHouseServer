@@ -10,9 +10,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 class Monitoring(private val logger: Logger) {
 
     companion object {
-        private const val FIRST_ALERT_THRESHOLD = 10 * 1000L
-        private const val SECOND_ALERT_THRESHOLD = 60 * 1000L
-        private const val CHECKING_THREAD_DELAY = 5 * 1000L
+        private const val FIRST_ALERT_THRESHOLD = 60 * 1000L
+        private const val SECOND_ALERT_THRESHOLD = 60 * 3 * 1000L
+        private const val CHECKING_THREAD_DELAY = 30 * 1000L
     }
 
     private val seenDevices: ConcurrentLinkedQueue<DeviceData> = ConcurrentLinkedQueue()
