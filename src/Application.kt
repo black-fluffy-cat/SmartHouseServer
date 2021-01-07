@@ -1,8 +1,7 @@
 package com.jj.smarthouseserver
 
-import com.jj.smarthouseserver.data.AlertData
-import com.jj.smarthouseserver.data.AlertFeedbackData
-import com.jj.smarthouseserver.data.HeartbeatData
+import com.jj.smarthouseserver.data.*
+import com.jj.smarthouseserver.managers.NgrokAddressesProcessor
 import com.jj.smarthouseserver.managers.RaspberryCallManager
 import io.ktor.application.*
 import io.ktor.features.*
@@ -14,20 +13,17 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.io.InputStream
-import java.io.OutputStream
 
 private val logger: Logger = LoggerFactory.getLogger("MainLogger")
 private const val SERVER_PORT = 8080
 
 private val raspberryCallManager = RaspberryCallManager(logger)
+private val ngrokAddressesProcessor = NgrokAddressesProcessor(logger)
 
 fun main(args: Array<String>) {
 
@@ -104,6 +100,18 @@ fun main(args: Array<String>) {
                 }
             }
 
+            post("/receiveNgrokAddresses") {
+                withContext(Dispatchers.IO) {
+                    try {
+                        logger.info("receiveNgrokAddresses - received request")
+                        val ngrokAddressesCallData = call.receive<NgrokAddressesCallData>()
+                        ngrokAddressesProcessor.process(ngrokAddressesCallData)
+                    } catch (e: Exception) {
+                        println(e.message)
+                    }
+                }
+            }
+
             get("/raspPhoto") {
                 withContext(Dispatchers.IO) {
                     raspberryCallManager.pingRaspberryToMakePhoto()
@@ -118,28 +126,4 @@ fun main(args: Array<String>) {
         }
     }
     server.start(wait = true)
-}
-
-suspend fun InputStream.copyToSuspend(
-    out: OutputStream,
-    bufferSize: Int = DEFAULT_BUFFER_SIZE,
-    yieldSize: Int = 4 * 1024 * 1024,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-): Long {
-    return withContext(dispatcher) {
-        val buffer = ByteArray(bufferSize)
-        var bytesCopied = 0L
-        var bytesAfterYield = 0L
-        while (true) {
-            val bytes = read(buffer).takeIf { it >= 0 } ?: break
-            out.write(buffer, 0, bytes)
-            if (bytesAfterYield >= yieldSize) {
-                yield()
-                bytesAfterYield %= yieldSize
-            }
-            bytesCopied += bytes
-            bytesAfterYield += bytes
-        }
-        return@withContext bytesCopied
-    }
 }
