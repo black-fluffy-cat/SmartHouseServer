@@ -3,6 +3,7 @@ package com.jj.smarthouseserver
 import com.jj.smarthouseserver.data.*
 import com.jj.smarthouseserver.managers.NgrokAddressesProcessor
 import com.jj.smarthouseserver.managers.RaspberryCallManager
+import com.jj.smarthouseserver.monitoring.Monitoring
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -24,6 +25,7 @@ private const val SERVER_PORT = 8080
 
 private val raspberryCallManager = RaspberryCallManager(logger)
 private val ngrokAddressesProcessor = NgrokAddressesProcessor(logger)
+private val monitoring = Monitoring(logger)
 
 fun main(args: Array<String>) {
 
@@ -61,6 +63,7 @@ fun main(args: Array<String>) {
                         "Heartbeat - deviceName: ${heartbeatData.deviceName}, timeFromStart: ${heartbeatData.timeFromStart}," +
                                 " timeFromAlert: ${heartbeatData.timeFromAlert}"
                     )
+                    monitoring.onReceivedHeartbeat(heartbeatData)
                     call.respond(mapOf("OK" to true))
                 }
             }
@@ -126,4 +129,5 @@ fun main(args: Array<String>) {
         }
     }
     server.start(wait = true)
+    monitoring.startMonitoring()
 }
