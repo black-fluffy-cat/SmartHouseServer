@@ -128,6 +128,6 @@ fun main(args: Array<String>) {
             }
         }
     }
-    server.start(wait = true)
     monitoring.startMonitoring()
+    server.start(wait = true)
 }
