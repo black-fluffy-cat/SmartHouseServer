@@ -14,12 +14,12 @@ class NgrokAddressesProcessor(private val logger: Logger) {
         ngrokAddressesCallData.let { data ->
             val logMessage = "received Ngrok addresses from id: ${data.senderId}"
             logger.info(logMessage)
-            LogSaver.saveLog(NGROK_TAG, logMessage)
+            LogSaver.saveNgrokLog(NGROK_TAG, logMessage)
             data.tunnelsList?.forEachIndexed { index, ngrokAddress ->
                 val logUrlMessage =
                     "$index. name: ${ngrokAddress?.name} publicUrl: ${ngrokAddress?.publicUrl} destination: ${ngrokAddress?.addr}"
                 logger.info(logUrlMessage)
-                LogSaver.saveLog(NGROK_TAG, logUrlMessage)
+                LogSaver.saveNgrokLog(NGROK_TAG, logUrlMessage)
             }
         }
     }

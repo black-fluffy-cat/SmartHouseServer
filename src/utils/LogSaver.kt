@@ -4,26 +4,49 @@ import java.io.*
 
 object LogSaver {
 
-    private const val LOGS_FILE_NAME = "LOGS_FILE.txt"
+    private const val NGROK_LOGS_FILE_NAME = "NGROK_LOGS.txt"
+    private const val MONITORING_LOGS_FILE_NAME = "MONITORING_LOGS.txt"
 
-    private var bufferedFileWriter: BufferedWriter? = null
-    private var currentFile: File? = null
+    private var ngrokLogsWriter: BufferedWriter? = null
+    private var ngrokLogsFile: File? = null
 
-    private fun createWriter() {
+    private var monitoringLogsWriter: BufferedWriter? = null
+    private var monitoringLogsFile: File? = null
+
+    fun saveNgrokLog(tag: String?, message: String?) {
+        if (ngrokLogsFile?.exists() != true || ngrokLogsWriter == null) {
+            ngrokLogsFile = createFile(NGROK_LOGS_FILE_NAME).also {
+                ngrokLogsWriter = createWriter(it)
+            }
+        }
+        ngrokLogsWriter?.let { writer -> saveLog(tag, message, writer) }
+    }
+
+    fun saveMonitoringLog(tag: String?, message: String?) {
+        if (monitoringLogsFile?.exists() != true || monitoringLogsWriter == null) {
+            monitoringLogsFile = createFile(MONITORING_LOGS_FILE_NAME).also {
+                monitoringLogsWriter = createWriter(it)
+            }
+        }
+        monitoringLogsWriter?.let { writer -> saveLog(tag, message, writer) }
+    }
+
+    private fun createWriter(file: File): BufferedWriter? {
         try {
-            val file = File(LOGS_FILE_NAME)
-            bufferedFileWriter = BufferedWriter(FileWriter(file, true))
+            return BufferedWriter(FileWriter(file, true))
         } catch (e: FileNotFoundException) {
             println("File not found, ${e.message}")
         }
+        return null
     }
 
+    private fun createFile(fileName: String) = File(fileName)
+
     @Synchronized
-    fun saveLog(tag: String?, message: String?) {
-        if (currentFile?.exists() != true || bufferedFileWriter == null) createWriter()
+    private fun saveLog(tag: String?, message: String?, fileWriter: BufferedWriter) {
         try {
-            bufferedFileWriter?.append("${getDateStringWithMillis()} $tag: $message\n")
-            bufferedFileWriter?.flush()
+            fileWriter.append("${getDateStringWithMillis()} $tag: $message\n")
+            fileWriter.flush()
         } catch (ioe: IOException) {
             println("Error while writing to file, ${ioe.message}")
         }
