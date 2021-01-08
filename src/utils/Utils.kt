@@ -1,4 +1,4 @@
-package com.jj.smarthouseserver
+package com.jj.smarthouseserver.utils
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -6,7 +6,11 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import java.io.InputStream
 import java.io.OutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
+
+fun getDateStringWithMillis(): String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ROOT).format(Date())
 
 suspend fun InputStream.copyToSuspend(
     out: OutputStream,
