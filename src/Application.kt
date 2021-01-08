@@ -102,6 +102,7 @@ fun main(args: Array<String>) {
                         println(e.message)
                     }
                 }
+                call.respond(mapOf("OK" to true))
             }
 
             post("/receiveNgrokAddresses") {
@@ -114,6 +115,7 @@ fun main(args: Array<String>) {
                         println(e.message)
                     }
                 }
+                call.respond(mapOf("OK" to true))
             }
 
             get("/raspPhoto") {
