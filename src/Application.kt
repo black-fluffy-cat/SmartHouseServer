@@ -86,7 +86,7 @@ fun main(args: Array<String>) {
                                 is PartData.FileItem -> {
                                     val fileName = part.originalFileName
                                     val ext = File(fileName).extension
-                                    val photoName = "$fileName-${System.currentTimeMillis()}.$ext"
+                                    val photoName = "${System.currentTimeMillis()}-$fileName.$ext"
                                     val file = File(saveDir, photoName)
                                     part.streamProvider().use { input ->
                                         file.outputStream().buffered().use { output ->
