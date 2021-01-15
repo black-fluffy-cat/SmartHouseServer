@@ -11,5 +11,5 @@ val smartHouseModule = module {
     single<Logger> { LoggerFactory.getLogger("MainLogger") }
     single { RaspberryCallManager(get()) }
     single { NgrokAddressesProcessor(get()) }
-    single { Monitoring(get()) }
+    single { Monitoring() }
 }
