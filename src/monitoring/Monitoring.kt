@@ -3,6 +3,7 @@ package com.jj.smarthouseserver.monitoring
 import com.jj.smarthouseserver.data.DeviceData
 import com.jj.smarthouseserver.data.HeartbeatData
 import com.jj.smarthouseserver.utils.LogSaver
+import org.koin.java.KoinJavaComponent
 import org.slf4j.Logger
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
@@ -15,6 +16,11 @@ class Monitoring(private val logger: Logger) {
         private const val SECOND_ALERT_THRESHOLD = 60 * 3 * 1000L
         private const val CHECKING_THREAD_DELAY = 30 * 1000L
         private const val MONITORING_TAG = "Monitoring"
+
+        fun startMonitoring() {
+            val monitoring by KoinJavaComponent.inject(Monitoring::class.java)
+            monitoring.startMonitoring()
+        }
     }
 
     private val seenDevices: ConcurrentLinkedQueue<DeviceData> = ConcurrentLinkedQueue()
@@ -26,10 +32,11 @@ class Monitoring(private val logger: Logger) {
             val checkingTime = System.currentTimeMillis()
             seenDevices.forEach { data ->
                 val timeDifference = checkingTime - data.lastTimeConnected
-                if (timeDifference > SECOND_ALERT_THRESHOLD) {
-                    logAndSaveWarn("Monitoring - ALERT - device ${data.deviceId} is unavailable for $timeDifference ms")
-                } else if (timeDifference > FIRST_ALERT_THRESHOLD) {
-                    logAndSaveWarn("Monitoring - Info - device ${data.deviceId} is unavailable for $timeDifference ms")
+                when {
+                    timeDifference > SECOND_ALERT_THRESHOLD ->
+                        logAndSaveWarn("Monitoring - ALERT - device ${data.deviceId} is unavailable for $timeDifference ms")
+                    timeDifference > FIRST_ALERT_THRESHOLD ->
+                        logAndSaveWarn("Monitoring - Info - device ${data.deviceId} is unavailable for $timeDifference ms")
                 }
             }
             Thread.sleep(CHECKING_THREAD_DELAY)
