@@ -1,5 +1,6 @@
 package com.jj.smarthouseserver.koin
 
+import com.jj.smarthouseserver.cameraData.ImageSaver
 import com.jj.smarthouseserver.managers.NgrokAddressesProcessor
 import com.jj.smarthouseserver.managers.RaspberryCallManager
 import com.jj.smarthouseserver.monitoring.Monitoring
@@ -11,5 +12,6 @@ val smartHouseModule = module {
     single<Logger> { LoggerFactory.getLogger("MainLogger") }
     single { RaspberryCallManager(get()) }
     single { NgrokAddressesProcessor(get()) }
-    single { Monitoring() }
+    single { Monitoring(get()) }
+    single { ImageSaver(get()) }
 }

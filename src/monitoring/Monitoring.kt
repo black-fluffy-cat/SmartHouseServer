@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
 //TODO Make endpoints and methods for removing device from list by request
-class Monitoring {
+class Monitoring(logger: Logger) {
 
     companion object {
         private const val FIRST_ALERT_THRESHOLD = 60 * 1000L
@@ -23,7 +23,6 @@ class Monitoring {
 
     private val seenDevices: ConcurrentLinkedQueue<DeviceData> = ConcurrentLinkedQueue()
 
-    private val logger by inject(Logger::class.java)
     private val monitoringLogger = MonitoringLogger(logger)
 
     private val isCheckingThreadRunning = AtomicBoolean(false)
