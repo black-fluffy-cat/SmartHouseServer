@@ -11,16 +11,18 @@ class NgrokAddressesProcessor(private val logger: Logger) {
     }
 
     fun process(ngrokAddressesCallData: NgrokAddressesCallData) {
-        ngrokAddressesCallData.let { data ->
-            val logMessage = "received Ngrok addresses from id: ${data.senderId}"
-            logger.info(logMessage)
-            LogSaver.saveNgrokLog(NGROK_TAG, logMessage)
-            data.tunnelsList?.forEachIndexed { index, ngrokAddress ->
-                val logUrlMessage =
-                    "$index. name: ${ngrokAddress?.name} publicUrl: ${ngrokAddress?.publicUrl} destination: ${ngrokAddress?.addr}"
-                logger.info(logUrlMessage)
-                LogSaver.saveNgrokLog(NGROK_TAG, logUrlMessage)
+        val logMessage = "received Ngrok addresses from id: ${ngrokAddressesCallData.senderId}"
+        printLogAndSave(logMessage)
+        ngrokAddressesCallData.tunnelsList?.forEachIndexed { index, ngrokAddress ->
+            ngrokAddress?.apply {
+                val logUrlMessage = "$index. name: $name publicUrl: $publicUrl destination: $addr"
+                printLogAndSave(logUrlMessage)
             }
         }
+    }
+
+    private fun printLogAndSave(message: String) {
+        logger.info(message)
+        LogSaver.saveNgrokLog(NGROK_TAG, message)
     }
 }

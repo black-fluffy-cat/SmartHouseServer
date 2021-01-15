@@ -17,10 +17,7 @@ class RaspberryCallManager(private val logger: Logger) {
     private val httpClient = HttpClient(CIO)
 
     suspend fun pingRaspberryToMakePhoto() {
-        val response = httpClient.post<HttpResponse> {
-            url(ALERT_PHOTO_ADDRESS)
-//            body =
-        }
+        val response = httpClient.post<HttpResponse> { url(ALERT_PHOTO_ADDRESS) /* body = */ }
         logger.info("After request to raspberry, resultCode: ${response.status}")
     }
 }
