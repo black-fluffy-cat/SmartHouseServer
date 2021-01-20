@@ -7,4 +7,5 @@ fun Application.registerRoutes() {
     nodesDataRoutes()
     pingRoutes()
     raspberryRoutes()
+    downloadDataRoutes()
 }
