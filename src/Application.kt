@@ -13,8 +13,11 @@ import org.koin.ktor.ext.Koin
 
 private const val SERVER_PORT = 8080
 
-fun main() {
+fun main() {}
 
+@Suppress("unused") // Referenced in application.conf
+@kotlin.jvm.JvmOverloads
+fun Application.module(testing: Boolean = false) {
     embeddedServer(Netty, SERVER_PORT) {
         install(ContentNegotiation) { register(ContentType.Application.Json, JacksonConverter()) }
         install(Koin) { modules(smartHouseModule) }
@@ -22,10 +25,5 @@ fun main() {
 
         Monitoring.startMonitoring()
     }.start(wait = true)
-}
-
-@Suppress("unused") // Referenced in application.conf
-@kotlin.jvm.JvmOverloads
-fun Application.module(testing: Boolean = false) {
 }
 
