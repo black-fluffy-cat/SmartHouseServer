@@ -13,7 +13,7 @@ import org.koin.ktor.ext.Koin
 
 private const val SERVER_PORT = 8080
 
-fun main(args: Array<String>) {
+fun main() {
 
     embeddedServer(Netty, SERVER_PORT) {
         install(ContentNegotiation) { register(ContentType.Application.Json, JacksonConverter()) }
