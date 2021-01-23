@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+val Any.tag: String get() = this.javaClass.simpleName ?: "tag"
+
 fun getDateStringWithMillis(): String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ROOT).format(Date())
 
 suspend fun InputStream.copyToSuspend(
