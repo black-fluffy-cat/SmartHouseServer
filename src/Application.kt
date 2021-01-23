@@ -23,3 +23,9 @@ fun main() {
         Monitoring.startMonitoring()
     }.start(wait = true)
 }
+
+@Suppress("unused") // Referenced in application.conf
+@kotlin.jvm.JvmOverloads
+fun Application.module(testing: Boolean = false) {
+}
+
