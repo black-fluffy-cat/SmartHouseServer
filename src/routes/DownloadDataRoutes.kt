@@ -12,7 +12,7 @@ fun Application.downloadDataRoutes() {
 
 fun Route.shareBigFile() {
     get("/bigFileDownload") {
-        val filepath = "/home/j/Pulpit/smarthouse_projects/KtorSmartHouseServer/dummyDownloadFile.xyz"
+        val filepath = "/home/op/Desktop/SmartHouse/SmartHouseServer/dummyDownloadFile.xyz"
         val file = File(filepath)
         if (file.exists()) {
             call.respondFile(file)
