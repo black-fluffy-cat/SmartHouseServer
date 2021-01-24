@@ -9,7 +9,7 @@ class ImageSaver(private val logger: Logger) {
 
     suspend fun savePartAsImage(part: PartData.FileItem, savePath: String) {
         val fileName = part.originalFileName
-        val ext = File(fileName).extension
+        val ext = getFileExtension(fileName)
         val photoName = "${System.currentTimeMillis()}-$fileName.$ext"
         val file = File(savePath, photoName)
         part.streamProvider().use { input ->
@@ -17,4 +17,6 @@ class ImageSaver(private val logger: Logger) {
         }
         logger.info("receivePhoto - saved photo with name $photoName")
     }
+
+    private fun getFileExtension(fileName: String?): String = fileName?.substringAfterLast('.', "") ?: ""
 }
