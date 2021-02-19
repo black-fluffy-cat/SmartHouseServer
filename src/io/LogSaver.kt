@@ -1,8 +1,9 @@
-package com.jj.smarthouseserver.utils
+package com.jj.smarthouseserver.io
 
-import java.io.*
+import java.io.BufferedWriter
+import java.io.File
 
-object LogSaver {
+object LogSaver : FileBridge() {
 
     private const val NODE_DATA_LOGS_FILE_NAME = "NODE_DATA_LOGS.txt"
     private const val NGROK_LOGS_FILE_NAME = "NGROK_LOGS.txt"
@@ -42,24 +43,5 @@ object LogSaver {
             }
         }
         monitoringLogsWriter?.let { writer -> saveLog(tag, message, writer) }
-    }
-
-    private fun createWriter(file: File): BufferedWriter? {
-        try {
-            return BufferedWriter(FileWriter(file, true))
-        } catch (e: FileNotFoundException) {
-            println("File not found, ${e.message}")
-        }
-        return null
-    }
-
-    @Synchronized
-    private fun saveLog(tag: String?, message: String?, fileWriter: BufferedWriter) {
-        try {
-            fileWriter.append("${getDateStringWithMillis()} $tag: $message\n")
-            fileWriter.flush()
-        } catch (ioe: IOException) {
-            println("Error while writing to file, ${ioe.message}")
-        }
     }
 }

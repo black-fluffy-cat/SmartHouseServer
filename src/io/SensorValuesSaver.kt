@@ -1,8 +1,10 @@
-package com.jj.smarthouseserver.utils
+package com.jj.smarthouseserver.io
 
-import java.io.*
+import com.jj.smarthouseserver.utils.tag
+import java.io.BufferedWriter
+import java.io.File
 
-class SensorValuesSaver {
+class SensorValuesSaver : FileBridge() {
 
     companion object {
         private const val SENSOR_VALUES_FILE_NAME = "SENSOR_VALUES.txt"
@@ -24,25 +26,5 @@ class SensorValuesSaver {
             }
         }
         println("Written sensor values to file, ${listOfValues.size}")
-    }
-
-    //TODO Remove duplicated code
-    private fun createWriter(file: File): BufferedWriter? {
-        try {
-            return BufferedWriter(FileWriter(file, true))
-        } catch (e: FileNotFoundException) {
-            println("File not found, ${e.message}")
-        }
-        return null
-    }
-
-    @Synchronized
-    private fun saveLog(tag: String?, message: String?, fileWriter: BufferedWriter) {
-        try {
-            fileWriter.append("${getDateStringWithMillis()} $tag: $message\n")
-            fileWriter.flush()
-        } catch (ioe: IOException) {
-            println("Error while writing to file, ${ioe.message}")
-        }
     }
 }

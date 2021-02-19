@@ -1,8 +1,8 @@
 package com.jj.smarthouseserver.managers
 
 import com.jj.smarthouseserver.data.BME280NodeData
-import com.jj.smarthouseserver.utils.LogSaver
-import com.jj.smarthouseserver.utils.SensorValuesSaver
+import com.jj.smarthouseserver.io.LogSaver
+import com.jj.smarthouseserver.io.SensorValuesSaver
 import com.jj.smarthouseserver.utils.tag
 import data.SensorValues
 import org.slf4j.Logger

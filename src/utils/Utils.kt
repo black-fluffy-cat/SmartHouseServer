@@ -38,5 +38,3 @@ suspend fun InputStream.copyToSuspend(
         return@withContext bytesCopied
     }
 }
-
-fun createFile(fileName: String) = File(fileName)
