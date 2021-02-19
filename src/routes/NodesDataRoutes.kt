@@ -5,6 +5,7 @@ import com.jj.smarthouseserver.data.BME280NodeData
 import com.jj.smarthouseserver.data.NgrokAddressesCallData
 import com.jj.smarthouseserver.managers.NgrokAddressesProcessor
 import com.jj.smarthouseserver.managers.NodeDataProcessor
+import data.SensorValues
 import io.ktor.application.*
 import io.ktor.http.content.*
 import io.ktor.request.*
@@ -24,6 +25,7 @@ fun Application.nodesDataRoutes() {
         receivePhoto(imageSaver, logger)
         receiveNgrokAddresses(ngrokAddressesProcessor, logger)
         receiveBme280Data(nodeDataProcessor, logger)
+        receiveSensorValues(nodeDataProcessor, logger)
     }
 }
 
@@ -58,6 +60,20 @@ fun Route.receiveBme280Data(nodeDataProcessor: NodeDataProcessor, logger: Logger
             logger.info("receiveBme280Data - received request")
             with(call.receive<BME280NodeData>()) { nodeDataProcessor.processBme280Data(this) }
             call.respond(mapOf("OK" to true))
+        }
+    }
+}
+
+fun Route.receiveSensorValues(nodeDataProcessor: NodeDataProcessor, logger: Logger) {
+    post("sensor/postValues") {
+        withContext(Dispatchers.IO) {
+            try {
+            logger.info("receiveSensorValues - received request")
+            with(call.receive<SensorValues>()) { nodeDataProcessor.processSensorValues(this) }
+            call.respond(mapOf("OK" to true))
+            } catch (e: Exception) {
+                logger.error("Exception", e)
+            }
         }
     }
 }

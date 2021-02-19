@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
+import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
@@ -37,3 +38,5 @@ suspend fun InputStream.copyToSuspend(
         return@withContext bytesCopied
     }
 }
+
+fun createFile(fileName: String) = File(fileName)

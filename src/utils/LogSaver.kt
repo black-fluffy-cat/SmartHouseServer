@@ -53,8 +53,6 @@ object LogSaver {
         return null
     }
 
-    private fun createFile(fileName: String) = File(fileName)
-
     @Synchronized
     private fun saveLog(tag: String?, message: String?, fileWriter: BufferedWriter) {
         try {
