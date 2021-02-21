@@ -1,6 +1,6 @@
 package com.jj.smarthouseserver.routes
 
-import com.jj.smarthouseserver.cameraData.ImageSaver
+import com.jj.smarthouseserver.cameraData.FileSaver
 import com.jj.smarthouseserver.data.BME280NodeData
 import com.jj.smarthouseserver.data.NgrokAddressesCallData
 import com.jj.smarthouseserver.managers.NgrokAddressesProcessor
@@ -19,24 +19,40 @@ import org.slf4j.Logger
 fun Application.nodesDataRoutes() {
     val ngrokAddressesProcessor by inject(NgrokAddressesProcessor::class.java)
     val nodeDataProcessor by inject(NodeDataProcessor::class.java)
-    val imageSaver by inject(ImageSaver::class.java)
+    val imageSaver by inject(FileSaver::class.java)
     val logger by inject(Logger::class.java)
     routing {
         receivePhoto(imageSaver, logger)
+        receiveVideo(imageSaver, logger)
         receiveNgrokAddresses(ngrokAddressesProcessor, logger)
         receiveBme280Data(nodeDataProcessor, logger)
         receiveSensorValues(nodeDataProcessor, logger)
     }
 }
 
-fun Route.receivePhoto(imageSaver: ImageSaver, logger: Logger) {
+fun Route.receivePhoto(fileSaver: FileSaver, logger: Logger) {
     post("/receivePhoto") {
         withContext(Dispatchers.IO) {
             logger.info("receivePhoto - received request")
             val savePath = "receivedPhotos/"
 
             call.receiveMultipart().forEachPart { part ->
-                if (part is PartData.FileItem) imageSaver.savePartAsImage(part, savePath)
+                if (part is PartData.FileItem) fileSaver.savePartFileToDisc(part, savePath)
+                part.dispose()
+            }
+            call.respond(mapOf("OK" to true))
+        }
+    }
+}
+
+fun Route.receiveVideo(fileSaver: FileSaver, logger: Logger) {
+    post("/receiveVideo") {
+        withContext(Dispatchers.IO) {
+            logger.info("receiveVideo - received request")
+            val savePath = "receivedVideos/"
+
+            call.receiveMultipart().forEachPart { part ->
+                if (part is PartData.FileItem) fileSaver.savePartFileToDisc(part, savePath)
                 part.dispose()
             }
             call.respond(mapOf("OK" to true))
