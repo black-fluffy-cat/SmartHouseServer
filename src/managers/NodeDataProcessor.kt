@@ -1,13 +1,15 @@
 package com.jj.smarthouseserver.managers
 
 import com.jj.smarthouseserver.data.BME280NodeData
+import com.jj.smarthouseserver.houseSystemState.DataSample
+import com.jj.smarthouseserver.houseSystemState.HouseSystemStateManager
 import com.jj.smarthouseserver.io.LogSaver
 import com.jj.smarthouseserver.io.SensorValuesSaver
 import com.jj.smarthouseserver.utils.tag
 import data.SensorValues
 import org.slf4j.Logger
 
-class NodeDataProcessor(private val logger: Logger) {
+class NodeDataProcessor(private val logger: Logger, private val houseSystemStateManager: HouseSystemStateManager) {
 
     private val sensorValuesSaver = SensorValuesSaver()
 
@@ -15,6 +17,8 @@ class NodeDataProcessor(private val logger: Logger) {
         with(bme280NodeData) {
             printLogAndSave("Received BME280 data from id: $deviceName")
             printLogAndSave("temperatureC: $temperatureC, pressurehPa: $pressurehPa, altitudeM: $altitudeM")
+
+            houseSystemStateManager.updateTemperatureState(DataSample(deviceName, temperatureC, "C"))
         }
     }
 

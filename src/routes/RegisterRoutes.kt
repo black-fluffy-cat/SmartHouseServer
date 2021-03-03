@@ -8,4 +8,5 @@ fun Application.registerRoutes() {
     pingRoutes()
     raspberryRoutes()
     downloadDataRoutes()
+    houseSystemStateRoutes()
 }
