@@ -27,6 +27,7 @@ fun Application.nodesDataRoutes() {
         receiveNgrokAddresses(ngrokAddressesProcessor, logger)
         receiveBme280Data(nodeDataProcessor, logger)
         receiveSensorValues(nodeDataProcessor, logger)
+        receivePIRAlert(nodeDataProcessor, logger)
     }
 }
 
@@ -84,12 +85,22 @@ fun Route.receiveSensorValues(nodeDataProcessor: NodeDataProcessor, logger: Logg
     post("sensor/postValues") {
         withContext(Dispatchers.IO) {
             try {
-            logger.info("receiveSensorValues - received request")
-            with(call.receive<SensorValues>()) { nodeDataProcessor.processSensorValues(this) }
-            call.respond(mapOf("OK" to true))
+                logger.info("receiveSensorValues - received request")
+                with(call.receive<SensorValues>()) { nodeDataProcessor.processSensorValues(this) }
+                call.respond(mapOf("OK" to true))
             } catch (e: Exception) {
                 logger.error("Exception", e)
             }
+        }
+    }
+}
+
+fun Route.receivePIRAlert(nodeDataProcessor: NodeDataProcessor, logger: Logger) {
+    post("/pirAlert") {
+        withContext(Dispatchers.IO) {
+            logger.info("receivePIRAlert - received ALERT")
+            nodeDataProcessor.processPirAlert()
+            call.respond(mapOf("OK" to true))
         }
     }
 }

@@ -31,4 +31,8 @@ class NodeDataProcessor(private val logger: Logger, private val houseSystemState
         printLogAndSave("Received sensor values, size of list: ${sensorValues.listOfValues.size}")
         sensorValuesSaver.saveSensorValues(sensorValues.listOfValues)
     }
+
+    fun processPirAlert() {
+        printLogAndSave("Received PIR alert request")
+    }
 }
