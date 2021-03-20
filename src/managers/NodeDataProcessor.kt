@@ -5,11 +5,17 @@ import com.jj.smarthouseserver.houseSystemState.DataSample
 import com.jj.smarthouseserver.houseSystemState.HouseSystemStateManager
 import com.jj.smarthouseserver.io.LogSaver
 import com.jj.smarthouseserver.io.SensorValuesSaver
+import com.jj.smarthouseserver.senders.LEDStripColorChanger
 import com.jj.smarthouseserver.utils.tag
 import data.SensorValues
 import org.slf4j.Logger
 
-class NodeDataProcessor(private val logger: Logger, private val houseSystemStateManager: HouseSystemStateManager) {
+class NodeDataProcessor(
+    private val logger: Logger,
+    private val houseSystemStateManager: HouseSystemStateManager,
+    private val alertStateManager: AlertStateManager,
+    private val ledStripColorChanger: LEDStripColorChanger
+) {
 
     private val sensorValuesSaver = SensorValuesSaver()
 
@@ -34,5 +40,21 @@ class NodeDataProcessor(private val logger: Logger, private val houseSystemState
 
     fun processPirAlert() {
         printLogAndSave("Received PIR alert request")
+        alertStateManager.receiveAlert()
+    }
+
+    fun processPirAlertOff() {
+        printLogAndSave("Received PIR alertOff request")
+        alertStateManager.receiveAlertOff()
+    }
+
+    fun setLEDStripNodeIP(ip: String) {
+        printLogAndSave("Received set nodeIP request")
+        ledStripColorChanger.setLEDStripNodeIP(ip)
+    }
+
+    fun alertArmSwitch(alertArmSwitch: AlertArmSwitch) {
+        if (alertArmSwitch.alertArmed) alertStateManager.armAlert()
+        else alertStateManager.disarmAlert()
     }
 }

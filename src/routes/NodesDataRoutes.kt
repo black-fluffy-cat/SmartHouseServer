@@ -3,6 +3,8 @@ package com.jj.smarthouseserver.routes
 import com.jj.smarthouseserver.cameraData.FileSaver
 import com.jj.smarthouseserver.data.BME280NodeData
 import com.jj.smarthouseserver.data.NgrokAddressesCallData
+import com.jj.smarthouseserver.data.NodeIPData
+import com.jj.smarthouseserver.managers.AlertArmSwitch
 import com.jj.smarthouseserver.managers.NgrokAddressesProcessor
 import com.jj.smarthouseserver.managers.NodeDataProcessor
 import data.SensorValues
@@ -28,6 +30,9 @@ fun Application.nodesDataRoutes() {
         receiveBme280Data(nodeDataProcessor, logger)
         receiveSensorValues(nodeDataProcessor, logger)
         receivePIRAlert(nodeDataProcessor, logger)
+        receivePIRAlertOff(nodeDataProcessor, logger)
+        setLEDStripIP(nodeDataProcessor, logger)
+        alertArmSwitch(nodeDataProcessor, logger)
     }
 }
 
@@ -100,6 +105,36 @@ fun Route.receivePIRAlert(nodeDataProcessor: NodeDataProcessor, logger: Logger) 
         withContext(Dispatchers.IO) {
             logger.info("receivePIRAlert - received ALERT")
             nodeDataProcessor.processPirAlert()
+            call.respond(mapOf("OK" to true))
+        }
+    }
+}
+
+fun Route.receivePIRAlertOff(nodeDataProcessor: NodeDataProcessor, logger: Logger) {
+    post("/pirAlertOff") {
+        withContext(Dispatchers.IO) {
+            logger.info("receivePIRAlertOff - received alertOff")
+            nodeDataProcessor.processPirAlertOff()
+            call.respond(mapOf("OK" to true))
+        }
+    }
+}
+
+fun Route.setLEDStripIP(nodeDataProcessor: NodeDataProcessor, logger: Logger) {
+    post("/ledStripIP") {
+        withContext(Dispatchers.IO) {
+            logger.info("ledStripIP - received led strip nodeIP")
+            with(call.receive<NodeIPData>()) { nodeDataProcessor.setLEDStripNodeIP(this.ip) }
+            call.respond(mapOf("OK" to true))
+        }
+    }
+}
+
+fun Route.alertArmSwitch(nodeDataProcessor: NodeDataProcessor, logger: Logger) {
+    post("/alertArm") {
+        withContext(Dispatchers.IO) {
+            logger.info("alertArm - received alertArm request")
+            with(call.receive<AlertArmSwitch>()) { nodeDataProcessor.alertArmSwitch(this) }
             call.respond(mapOf("OK" to true))
         }
     }
