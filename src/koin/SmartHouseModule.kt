@@ -7,6 +7,7 @@ import com.jj.smarthouseserver.managers.NgrokAddressesProcessor
 import com.jj.smarthouseserver.managers.NodeDataProcessor
 import com.jj.smarthouseserver.managers.RaspberryCallManager
 import com.jj.smarthouseserver.monitoring.Monitoring
+import com.jj.smarthouseserver.senders.AlertVisualizerController
 import com.jj.smarthouseserver.senders.LEDStripColorChanger
 import org.koin.dsl.module
 import org.slf4j.Logger
@@ -22,5 +23,6 @@ val smartHouseModule = module {
     single { HouseSystemStateManager() }
 
     single { LEDStripColorChanger() }
-    single { AlertStateManager(get()) }
+    single { AlertStateManager(get(), get()) }
+    single { AlertVisualizerController() }
 }

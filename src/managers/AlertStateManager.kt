@@ -1,24 +1,29 @@
 package com.jj.smarthouseserver.managers
 
+import com.jj.smarthouseserver.senders.AlertVisualizerController
 import com.jj.smarthouseserver.senders.LEDStripColorChanger
 import java.util.concurrent.atomic.AtomicBoolean
 
 data class AlertArmSwitch(val alertArmed: Boolean)
 
-class AlertStateManager(private val ledStripColorChanger: LEDStripColorChanger) {
+class AlertStateManager(
+    private val ledStripColorChanger: LEDStripColorChanger,
+    private val alertVisualizerController: AlertVisualizerController
+) {
 
     private val alertArmed = AtomicBoolean(true)
 
     fun receiveAlert() {
         if (alertArmed.get()) {
             setRedLeds()
-            // TODO Send data to buzzer node
+            alertVisualizerController.turnVisualizerOn()
         }
     }
 
     fun receiveAlertOff() {
         if (alertArmed.get()) {
             setGreenLeds()
+            alertVisualizerController.turnVisualizerOff()
         }
     }
 
