@@ -22,6 +22,10 @@ sourceSets {
     test.resources.srcDirs = ['testresources']
 }
 
+test {
+    useJUnitPlatform()
+}
+
 repositories {
     mavenLocal()
     jcenter()
@@ -37,6 +41,7 @@ dependencies {
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
     testImplementation 'org.mockito:mockito-inline:3.7.7'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
 
     // Koin
     compile "org.koin:koin-ktor:$koin_version"
