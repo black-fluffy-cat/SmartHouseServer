@@ -1,4 +1,4 @@
-package com.jj.smarthouseserver.cameraData
+package com.jj.smarthouseserver.io.disc
 
 import com.jj.smarthouseserver.utils.copyToSuspend
 import io.ktor.http.content.*

@@ -1,6 +1,6 @@
 package com.jj.smarthouseserver.routes
 
-import com.jj.smarthouseserver.cameraData.FileSaver
+import com.jj.smarthouseserver.io.disc.FileSaver
 import com.jj.smarthouseserver.data.BME280NodeData
 import com.jj.smarthouseserver.data.NgrokAddressesCallData
 import com.jj.smarthouseserver.data.NodeIPData

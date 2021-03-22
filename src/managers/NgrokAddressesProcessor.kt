@@ -1,6 +1,6 @@
 package com.jj.smarthouseserver.managers
 
-import com.jj.smarthouseserver.io.LogSaver
+import com.jj.smarthouseserver.io.disc.LogSaver
 import com.jj.smarthouseserver.data.NgrokAddressesCallData
 import org.slf4j.Logger
 

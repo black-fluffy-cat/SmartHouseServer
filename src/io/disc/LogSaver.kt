@@ -1,4 +1,4 @@
-package com.jj.smarthouseserver.io
+package com.jj.smarthouseserver.io.disc
 
 import java.io.BufferedWriter
 import java.io.File

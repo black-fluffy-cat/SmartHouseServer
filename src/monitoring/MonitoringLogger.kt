@@ -1,6 +1,6 @@
 package com.jj.smarthouseserver.monitoring
 
-import com.jj.smarthouseserver.io.LogSaver
+import com.jj.smarthouseserver.io.disc.LogSaver
 import org.slf4j.Logger
 
 class MonitoringLogger(private val logger: Logger) {
