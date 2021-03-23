@@ -4,8 +4,6 @@ import com.jj.smarthouseserver.houseSystemState.HouseSystemStateManager
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.koin.java.KoinJavaComponent.inject
 
 fun Application.houseSystemStateRoutes() {
@@ -15,9 +13,7 @@ fun Application.houseSystemStateRoutes() {
 
 fun Route.getHouseSystemState(houseSystemStateManager: HouseSystemStateManager) {
     get("/houseState") {
-        withContext(Dispatchers.IO) {
-            val systemState = houseSystemStateManager.getHouseSystemState()
-            call.respond(systemState)
-        }
+        val systemState = houseSystemStateManager.getHouseSystemState()
+        call.respond(systemState)
     }
 }

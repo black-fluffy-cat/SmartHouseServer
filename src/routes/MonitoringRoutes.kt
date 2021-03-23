@@ -8,8 +8,6 @@ import io.ktor.application.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.koin.java.KoinJavaComponent.inject
 import org.slf4j.Logger
 
@@ -26,24 +24,20 @@ fun Application.monitoringRoutes() {
 
 fun Route.receiveNodeAlertRoute(raspberryCallManager: RaspberryCallManager, logger: Logger) {
     post("/alert") {
-        withContext(Dispatchers.IO) {
-            with(call.receive<AlertData>()) {
-                logger.info("Alert - deviceName: $deviceName, timeFromStart: $timeFromStart, alertState: $alertState")
-            }
-            call.respond(mapOf("OK" to true))
-            raspberryCallManager.pingRaspberryToMakePhoto()
+        with(call.receive<AlertData>()) {
+            logger.info("Alert - deviceName: $deviceName, timeFromStart: $timeFromStart, alertState: $alertState")
         }
+        call.respond(mapOf("OK" to true))
+        raspberryCallManager.pingRaspberryToMakePhoto()
     }
 }
 
 fun Route.receiveHeartbeatRoute(monitoring: Monitoring, logger: Logger) {
     post("/heartbeat") {
-        withContext(Dispatchers.IO) {
-            val heartbeatData = call.receive<HeartbeatData>().apply {
-                logger.info("Heartbeat - deviceName: $deviceName, timeFromStart: $timeFromStart, timeFromAlert: $timeFromAlert")
-            }
-            call.respond(mapOf("OK" to true))
-            monitoring.onReceivedHeartbeat(heartbeatData)
+        val heartbeatData = call.receive<HeartbeatData>().apply {
+            logger.info("Heartbeat - deviceName: $deviceName, timeFromStart: $timeFromStart, timeFromAlert: $timeFromAlert")
         }
+        call.respond(mapOf("OK" to true))
+        monitoring.onReceivedHeartbeat(heartbeatData)
     }
 }
