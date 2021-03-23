@@ -1,11 +1,17 @@
 package com.jj.smarthouseserver.senders
 
 import com.jj.smarthouseserver.io.network.PingCreator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.jj.smarthouseserver.managers.AlertState
+import com.jj.smarthouseserver.managers.AlertStateManager
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import utils.coroutines.ICoroutineScopeProvider
 
-class AlertVisualizerController(private val pingCreator: PingCreator) {
+class AlertVisualizerController(
+    private val pingCreator: PingCreator,
+    private val alertStateManager: AlertStateManager,
+    private val coroutineScopeProvider: ICoroutineScopeProvider
+) {
 
     companion object {
         private const val ALERT_ON_ENDPOINT = "/alert"
@@ -14,18 +20,23 @@ class AlertVisualizerController(private val pingCreator: PingCreator) {
 
     private var nodeAddress = "http://192.168.1.6"
 
-    fun turnVisualizerOn() {
-        setVisualizer(ALERT_ON_ENDPOINT)
+    init {
+        coroutineScopeProvider.getIO().launch {
+            alertStateManager.observeAlertState().collect { onAlertStateChanged(it) }
+        }
     }
 
-    fun turnVisualizerOff() {
-        setVisualizer(ALERT_OFF_ENDPOINT)
+    private fun onAlertStateChanged(alertState: AlertState) {
+        if (alertState.isAlertState) turnVisualizerOn()
+        else turnVisualizerOff()
     }
+
+    private fun turnVisualizerOn() = setVisualizer(ALERT_ON_ENDPOINT)
+
+    private fun turnVisualizerOff() = setVisualizer(ALERT_OFF_ENDPOINT)
 
     private fun setVisualizer(endpoint: String) {
         val urlWithEndpoint = "$nodeAddress$endpoint"
-        CoroutineScope(Dispatchers.IO).launch {
-            pingCreator.get(urlWithEndpoint)
-        }
+        coroutineScopeProvider.getIO().launch { pingCreator.get(urlWithEndpoint) }
     }
 }

@@ -26,9 +26,9 @@ val smartHouseModule = module {
     single { FileSaver(get()) }
     single { HouseSystemStateManager() }
 
-    single { LEDStripColorChanger(get()) }
-    single { AlertStateManager(get(), get()) }
-    single { AlertVisualizerController(get()) }
+    single { LEDStripColorChanger(get(), get(), get()) }
+    single { AlertStateManager() }
+    single { AlertVisualizerController(get(), get(), get()) }
 
     single<PingCreator> { NetworkPing() }
 
