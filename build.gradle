@@ -45,6 +45,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:3.7.7'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3'
 
     // Koin
     compile "org.koin:koin-ktor:$koin_version"
