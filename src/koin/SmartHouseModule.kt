@@ -23,7 +23,7 @@ val smartHouseModule = module {
     single { NgrokAddressesProcessor(get()) }
     single { NodeDataProcessor(get(), get(), get(), get()) }
     single { Monitoring(get()) }
-    single { FileSaver(get()) }
+    single { FileSaver(get(), get()) }
     single { HouseSystemStateManager() }
 
     single { LEDStripColorChanger(get(), get(), get()) }

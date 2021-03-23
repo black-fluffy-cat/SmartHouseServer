@@ -1,14 +1,13 @@
 package com.jj.smarthouseserver.utils
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
-import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
 
 val Any.tag: String get() = this.javaClass.simpleName ?: "tag"
@@ -19,7 +18,7 @@ suspend fun InputStream.copyToSuspend(
     out: OutputStream,
     bufferSize: Int = DEFAULT_BUFFER_SIZE,
     yieldSize: Int = 4 * 1024 * 1024,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
+    dispatcher: CoroutineContext = Dispatchers.IO
 ): Long {
     return withContext(dispatcher) {
         val buffer = ByteArray(bufferSize)
