@@ -23,7 +23,7 @@ class LCDStateVisualizerController(
 ) {
 
     companion object {
-        private const val SEND_HOUSE_STATE_ENDPOINT = "/showHouseState"
+        private const val SEND_HOUSE_STATE_ENDPOINT = "/setText"
     }
 
     init {
