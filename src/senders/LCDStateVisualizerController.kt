@@ -40,10 +40,16 @@ class LCDStateVisualizerController(
     }
 
     private fun onHouseSystemStateChanged(houseState: HouseState) {
+        print("onHouseSystemStateChanged, houseState: $houseState")
         val urlWithEndpoint = "$nodeAddress$SEND_HOUSE_STATE_ENDPOINT"
         val lcdData = prepareLCDData(houseState)
-        coroutineScopeProvider.getIO().launch { networkCallCreator.post(urlWithEndpoint, lcdData) }
-        print("onHouseSystemStateChanged, houseState: $houseState")
+        coroutineScopeProvider.getIO().launch {
+            try {
+                networkCallCreator.post(urlWithEndpoint, lcdData)
+            } catch (e: Exception) {
+                print("Exception while sending LCD data: + $e")
+            }
+        }
     }
 
     private fun prepareLCDData(houseState: HouseState): LCDRowsData {
