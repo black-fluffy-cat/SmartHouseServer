@@ -6,14 +6,14 @@ import com.jj.smarthouseserver.io.network.PingCreator
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import utils.coroutines.ICoroutineScopeProvider
-import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@kotlinx.serialization.Serializable
 data class LCDRowsData(
     val firstRow: String, val secondRow: String,
     val thirdRow: String, val fourthRow: String
-) : Serializable
+)
 
 class LCDStateVisualizerController(
     private val houseSystemStateManager: HouseSystemStateManager,
