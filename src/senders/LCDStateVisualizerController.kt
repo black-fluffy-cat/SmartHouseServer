@@ -9,6 +9,7 @@ import utils.coroutines.ICoroutineScopeProvider
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 @kotlinx.serialization.Serializable
 data class LCDRowsData(
@@ -47,15 +48,15 @@ class LCDStateVisualizerController(
 
     private fun prepareLCDData(houseState: HouseState): LCDRowsData {
         val temperaturesList = houseState.temperatureState.temperatures.toList()
-        val time = LocalDateTime.now().format(DateTimeFormatter.ISO_TIME)
+        val time = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_TIME)
         val firstRow = "Dane z: $time"
         val secondRow = ""
 
         val firstDataSample = temperaturesList.getOrNull(0)?.second
-        val thirdRow = "Dwór: ${firstDataSample?.value ?: "" + " " + firstDataSample?.unit}"
+        val thirdRow = "Dwor: ${firstDataSample?.value ?: ""} ${firstDataSample?.unit ?: ""}"
 
         val secondDataSample = temperaturesList.getOrNull(1)?.second
-        val fourthRow = "Dom: ${secondDataSample?.value ?: "" + " " + secondDataSample?.unit}"
+        val fourthRow = "Dom: ${secondDataSample?.value ?: ""} ${secondDataSample?.unit ?: ""}"
 
         return LCDRowsData(firstRow, secondRow, thirdRow, fourthRow)
     }
