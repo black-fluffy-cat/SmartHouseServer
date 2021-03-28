@@ -32,5 +32,5 @@ val smartHouseModule = module {
 
     single<PingCreator> { NetworkPing() }
 
-    single<ICoroutineScopeProvider> { CoroutineScopeProvider() }
+    factory<ICoroutineScopeProvider> { CoroutineScopeProvider() }
 }
