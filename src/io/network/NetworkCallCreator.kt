@@ -19,10 +19,9 @@ class NetworkCallCreator : PingCreator {
         httpClient.post<HttpResponse> {
             body = lcdRowsData
 
-            headers {
-                append(HttpHeaders.ContentType, ContentType.Application.Json)
-            }
+            header(HttpHeaders.ContentType, ContentType.Application.Json)
             contentType(ContentType.Application.Json.withParameter("charset", "utf-8"))
+            accept(ContentType.Application.Json)
             url(url)
         }
 }
