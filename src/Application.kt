@@ -5,8 +5,7 @@ import com.jj.smarthouseserver.monitoring.Monitoring
 import com.jj.smarthouseserver.routes.registerRoutes
 import io.ktor.application.*
 import io.ktor.features.*
-import io.ktor.http.*
-import io.ktor.jackson.*
+import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import org.koin.ktor.ext.Koin
@@ -19,7 +18,7 @@ fun main() {}
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     embeddedServer(Netty, SERVER_PORT) {
-        install(ContentNegotiation) { register(ContentType.Application.Json, JacksonConverter()) }
+        install(ContentNegotiation) { json() }
         install(Koin) { modules(smartHouseModule) }
         registerRoutes()
 

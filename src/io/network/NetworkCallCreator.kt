@@ -17,12 +17,12 @@ class NetworkCallCreator : PingCreator {
 
     override suspend fun post(url: String, lcdRowsData: LCDRowsData) =
         httpClient.post<HttpResponse> {
+            body = lcdRowsData
+
             headers {
                 append(HttpHeaders.ContentType, ContentType.Application.Json)
             }
             contentType(ContentType.Application.Json.withParameter("charset", "utf-8"))
             url(url)
-
-            body = lcdRowsData
         }
 }
