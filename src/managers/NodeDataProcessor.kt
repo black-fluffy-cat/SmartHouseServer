@@ -5,6 +5,7 @@ import com.jj.smarthouseserver.houseSystemState.DataSample
 import com.jj.smarthouseserver.houseSystemState.HouseSystemStateManager
 import com.jj.smarthouseserver.io.disc.LogSaver
 import com.jj.smarthouseserver.io.disc.SensorValuesSaver
+import com.jj.smarthouseserver.senders.LCDStateVisualizerController
 import com.jj.smarthouseserver.senders.LEDStripColorChanger
 import com.jj.smarthouseserver.utils.tag
 import data.SensorValues
@@ -14,11 +15,13 @@ class NodeDataProcessor(
     private val logger: Logger,
     private val houseSystemStateManager: HouseSystemStateManager,
     private val alertStateManager: AlertStateManager,
-    private val ledStripColorChanger: LEDStripColorChanger
+    private val ledStripColorChanger: LEDStripColorChanger,
+    private val lcdStateVisualizerController: LCDStateVisualizerController
 ) {
 
     private val sensorValuesSaver = SensorValuesSaver()
 
+    //TODO process this data in other component, make NodeDataProcessor only proxy
     fun processBme280Data(bme280NodeData: BME280NodeData) {
         with(bme280NodeData) {
             printLogAndSave("Received BME280 data from id: $deviceName")
@@ -49,8 +52,13 @@ class NodeDataProcessor(
     }
 
     fun setLEDStripNodeIP(ip: String) {
-        printLogAndSave("Received set nodeIP request")
+        printLogAndSave("Received set LED nodeIP request")
         ledStripColorChanger.setLEDStripNodeIP(ip)
+    }
+
+    fun setLCDNodeIP(ip: String) {
+        printLogAndSave("Received set LCD nodeIP request")
+        lcdStateVisualizerController.setLCDNodeIP(ip)
     }
 
     fun alertArmSwitch(alertArmSwitch: AlertArmSwitch) {

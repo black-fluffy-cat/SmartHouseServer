@@ -112,6 +112,14 @@ fun Route.setLEDStripIP(nodeDataProcessor: NodeDataProcessor, logger: Logger) {
     }
 }
 
+fun Route.setLCDNodeIP(nodeDataProcessor: NodeDataProcessor, logger: Logger) {
+    post("/lcdNodeIP") {
+        logger.info("lcdNodeIP - received led strip nodeIP")
+        with(call.receive<NodeIPData>()) { nodeDataProcessor.setLCDNodeIP(this.ip) }
+        call.respond(mapOf("OK" to true))
+    }
+}
+
 fun Route.alertArmSwitch(nodeDataProcessor: NodeDataProcessor, logger: Logger) {
     post("/alertArm") {
         logger.info("alertArm - received alertArm request")
