@@ -3,6 +3,7 @@ package com.jj.smarthouseserver.routes
 import com.jj.smarthouseserver.data.BME280NodeData
 import com.jj.smarthouseserver.data.NgrokAddressesCallData
 import com.jj.smarthouseserver.data.NodeIPData
+import com.jj.smarthouseserver.io.disc.DiscSpaceMonitor
 import com.jj.smarthouseserver.io.disc.FileSaver
 import com.jj.smarthouseserver.managers.AlertArmSwitch
 import com.jj.smarthouseserver.managers.NgrokAddressesProcessor
@@ -20,10 +21,11 @@ fun Application.nodesDataRoutes() {
     val ngrokAddressesProcessor by inject(NgrokAddressesProcessor::class.java)
     val nodeDataProcessor by inject(NodeDataProcessor::class.java)
     val imageSaver by inject(FileSaver::class.java)
+    val discSpaceMonitor by inject(DiscSpaceMonitor::class.java)
     val logger by inject(Logger::class.java)
     routing {
         receivePhoto(imageSaver, logger)
-        receiveVideo(imageSaver, logger)
+        receiveVideo(imageSaver, discSpaceMonitor, logger)
         receiveNgrokAddresses(ngrokAddressesProcessor, logger)
         receiveBme280Data(nodeDataProcessor, logger)
         receiveSensorValues(nodeDataProcessor, logger)
@@ -47,7 +49,7 @@ fun Route.receivePhoto(fileSaver: FileSaver, logger: Logger) {
     }
 }
 
-fun Route.receiveVideo(fileSaver: FileSaver, logger: Logger) {
+fun Route.receiveVideo(fileSaver: FileSaver, discSpaceMonitor: DiscSpaceMonitor, logger: Logger) {
     post("/receiveVideo") {
         logger.info("receiveVideo - received request")
         val savePath = "receivedVideos/"
@@ -57,6 +59,7 @@ fun Route.receiveVideo(fileSaver: FileSaver, logger: Logger) {
             part.dispose()
         }
         call.respond(mapOf("OK" to true))
+        discSpaceMonitor.onDiscOperationPerformed()
     }
 }
 

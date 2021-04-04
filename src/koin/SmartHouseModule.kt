@@ -1,6 +1,7 @@
 package com.jj.smarthouseserver.koin
 
 import com.jj.smarthouseserver.houseSystemState.HouseSystemStateManager
+import com.jj.smarthouseserver.io.disc.DiscSpaceMonitor
 import com.jj.smarthouseserver.io.disc.FileSaver
 import com.jj.smarthouseserver.io.network.NetworkCallCreator
 import com.jj.smarthouseserver.io.network.PingCreator
@@ -35,4 +36,6 @@ val smartHouseModule = module {
     single<PingCreator> { NetworkCallCreator() }
 
     factory<ICoroutineScopeProvider> { CoroutineScopeProvider() }
+
+    single { DiscSpaceMonitor() }
 }
