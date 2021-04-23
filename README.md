@@ -1,5 +1,9 @@
 # SmartHouseServer
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=black-fluffy-cat_SmartHouseServer&metric=alert_status)](https://sonarcloud.io/dashboard?id=black-fluffy-cat_SmartHouseServer)
+
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=black-fluffy-cat_SmartHouseServer&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=black-fluffy-cat_SmartHouseServer)
+
 ![Build status](https://github.com/black-fluffy-cat/SmartHouseServer/actions/workflows/gradleBuild.yml/badge.svg)
 
 ## General description
